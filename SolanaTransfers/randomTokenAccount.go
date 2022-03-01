@@ -18,7 +18,7 @@ var MintPubkey = common.PublicKeyFromString("Hgqdhq5bb7cWEyQEWREvmUMFP8LP3PCCUV4
 
 func GenerateTokenAccount() {
 
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
+	c := client.NewClient(rpc.TestnetRPCEndpoint)
 
 	AliceRandomTokenAccount := types.NewAccount()
 	fmt.Println("alice token account:", AliceRandomTokenAccount.PublicKey.ToBase58())

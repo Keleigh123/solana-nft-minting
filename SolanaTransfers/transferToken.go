@@ -15,7 +15,7 @@ var AliceTokenRandomTokenPubkey = common.PublicKeyFromString("BV5EnZ3wFAhRt4Kff6
 var AliceTokenATAPubkey = common.PublicKeyFromString("2oNTPr1zd4AwDKxrAfsUp7Qt6cCtd88v5tdAVBa4qeqy")
 
 func TransferTokens() {
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
+	c := client.NewClient(rpc.TestnetRPCEndpoint)
 
 	res, err := c.GetRecentBlockhash(context.Background())
 	if err != nil {
