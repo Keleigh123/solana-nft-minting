@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"solana-wallet/SolanaTransfers"
 
 	"fmt"
 	"log"
@@ -40,6 +41,17 @@ func main() {
 		log.Fatalf("failed to get recent blockhash, err: %v", err)
 	}
 
+	//fund new account----------------------------------------------------------------------------------------
+	// sig, err := c.RequestAirdrop(
+	// 	context.TODO(),
+	// 	wallet.PublicKey.ToBase58(), // address
+	// 	1e9,                         // lamports (1 SOL = 10^9 lamports)
+	// )
+	// if err != nil {
+	// 	log.Fatalf("failed to request airdrop, err: %v", err)
+	// }
+	// fmt.Println(sig)
+	//get balance --------------------------------------------------------------------------------------------------------------
 	// balance, err := c.GetBalance(
 	// 	context.TODO(),
 	// 	wallet.PublicKey.ToBase58(),
@@ -58,7 +70,7 @@ func main() {
 				sysprog.Transfer(sysprog.TransferParam{
 					From:   AliceSK.PublicKey,
 					To:     wallet.PublicKey,
-					Amount: 5,
+					Amount: 15,
 				}),
 			},
 		}),
@@ -74,4 +86,8 @@ func main() {
 	}
 
 	log.Println("txhash:", txhash)
+
+	SolanaTransfers.Mint()
+	SolanaTransfers.GenerateTokenAccount()
+	SolanaTransfers.TransferTokens()
 }
