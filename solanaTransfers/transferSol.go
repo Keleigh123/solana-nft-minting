@@ -2,6 +2,6 @@ package solanatransfers
 
 import "log"
 
-func transferSol() {
+func TransferSolCoin() {
 	log.Println("-----------------------testing--------------")
 }
