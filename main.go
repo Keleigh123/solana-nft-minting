@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"solana-wallet/SolanaTransfers"
 
 	"fmt"
 	"log"
 
 	//"log"
+	"solana-wallet/solanaHandler"
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/program/sysprog"
@@ -91,9 +91,5 @@ func main() {
 	fmt.Println("-------------------------------------------balance is --------------------", balance)
 	fmt.Printf("balance: %v\n", balance)
 
-	SolanaTransfers.Mint()
-	SolanaTransfers.GenerateRandomTokenAccount()
-	SolanaTransfers.MintTo()
-	SolanaTransfers.GenerateTokenAccount()
-	//SolanaTransfers.TransferTokens()
+	solanaHandler.HandleCalls()
 }

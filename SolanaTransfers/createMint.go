@@ -14,15 +14,17 @@ import (
 )
 
 var AliceSK, _ = types.AccountFromBytes([]byte{162, 128, 223, 203, 33, 217, 35, 50, 114, 79, 106, 50, 93, 174, 66, 2, 47, 22, 191, 158, 233, 41, 109, 52, 49, 255, 214, 3, 3, 182, 50, 185, 2, 212, 203, 14, 73, 174, 65, 37, 136, 138, 5, 84, 53, 62, 136, 198, 69, 3, 211, 0, 20, 214, 9, 140, 211, 24, 14, 197, 109, 104, 35, 65})
+var Minting string
+var MintKey string
 
-func Mint() string {
+func Mint() (string, error) {
 	log.Println("-----------------------testing--------------")
 
 	c := client.NewClient(rpc.TestnetRPCEndpoint)
 
 	// create an mint account
-	mint := types.NewAccount()
-	fmt.Println("mint:", mint.PublicKey.ToBase58())
+	Minting := types.NewAccount()
+	fmt.Println("mint:", Minting.PublicKey.ToBase58())
 
 	// sig, err := c.RequestAirdrop(
 	// 	context.TODO(),
@@ -55,23 +57,23 @@ func Mint() string {
 			Instructions: []types.Instruction{
 				sysprog.CreateAccount(sysprog.CreateAccountParam{
 					From:     AliceSK.PublicKey,
-					New:      mint.PublicKey,
+					New:      Minting.PublicKey,
 					Owner:    common.TokenProgramID,
 					Lamports: rentExemptionBalance,
 					Space:    tokenprog.MintAccountSize,
 				}),
 				tokenprog.InitializeMint(tokenprog.InitializeMintParam{
 					Decimals:   0,
-					Mint:       mint.PublicKey,
+					Mint:       Minting.PublicKey,
 					MintAuth:   AliceSK.PublicKey,
 					FreezeAuth: nil,
 				}),
 			},
 		}),
-		Signers: []types.Account{AliceSK, mint},
+		Signers: []types.Account{AliceSK, Minting},
 	})
 	fmt.Println("--------------------------------------------------mint---------------------", Mint)
-	var MintKey = mint.PublicKey
+	MintKey = Minting.PublicKey.ToBase58()
 	fmt.Println("---------------------------------mint key-----------------------", MintKey)
 	if err != nil {
 		log.Fatalf("generate tx error, err: %v\n", err)
@@ -83,6 +85,6 @@ func Mint() string {
 	}
 
 	log.Println("txhash for minting account:", txhash)
-	return MintKey.String()
+	return MintKey, nil
 
 }

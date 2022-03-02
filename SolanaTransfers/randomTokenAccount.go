@@ -13,33 +13,34 @@ import (
 	"github.com/portto/solana-go-sdk/types"
 )
 
-func GenerateRandomTokenAccount() {
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
+func GenerateRandomTokenAccount(MintKey string) (string, string, error) {
+	c := client.NewClient(rpc.TestnetRPCEndpoint)
 
 	aliceRandomTokenAccount := types.NewAccount()
 	fmt.Println("alice random token account:", aliceRandomTokenAccount.PublicKey.ToBase58())
-
+	var randomToken = aliceRandomTokenAccount.PublicKey.ToBase58()
 	//----------------------------fund account --------------------------
-	sig, err := c.RequestAirdrop(
-		context.TODO(),
-		aliceRandomTokenAccount.PublicKey.ToBase58(), // address
-		1e9, // lamports (1 SOL = 10^9 lamports)
-	)
-	if err != nil {
-		log.Fatalf("failed to request airdrop, err: %v", err)
-	}
-	fmt.Println("-----------------------------------------air drop succeeded-------------------------------")
-	fmt.Println(sig)
+	// sig, err := c.RequestAirdrop(
+	// 	context.TODO(),
+	// 	aliceRandomTokenAccount.PublicKey.ToBase58(), // address
+	// 	1e9, // lamports (1 SOL = 10^9 lamports)
+	// )
+	// if err != nil {
+	// 	log.Fatalf("failed to request airdrop, err: %v", err)
+	// }
+	// fmt.Println("-----------------------------------------air drop succeeded-------------------------------")
+	// fmt.Println(sig)
 
 	rentExemptionBalance, err := c.GetMinimumBalanceForRentExemption(context.Background(), tokenprog.TokenAccountSize)
 	if err != nil {
 		log.Fatalf("get min balacne for rent exemption, err: %v", err)
 	}
-
+	log.Println("-----------------------------------checkpoint 1 ------------------------------------")
 	res, err := c.GetRecentBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("get recent block hash error, err: %v\n", err)
 	}
+	log.Println("-----------------------------------checkpoint 2 ------------------------------------")
 	tx, err := types.NewTransaction(types.NewTransactionParam{
 		Message: types.NewMessage(types.NewMessageParam{
 			FeePayer:        AliceSK.PublicKey,
@@ -54,7 +55,7 @@ func GenerateRandomTokenAccount() {
 				}),
 				tokenprog.InitializeAccount(tokenprog.InitializeAccountParam{
 					Account: aliceRandomTokenAccount.PublicKey,
-					Mint:    MintPubkey,
+					Mint:    common.PublicKeyFromString(MintKey),
 					Owner:   AliceSK.PublicKey,
 				}),
 			},
@@ -64,11 +65,14 @@ func GenerateRandomTokenAccount() {
 	if err != nil {
 		log.Println("generate tx error, err: %v\n", err)
 	}
+	log.Println("-----------------------------------checkpoint 3 ------------------------------------")
 
 	txhash, err := c.SendTransaction(context.Background(), tx)
+	log.Println("-----------------------------------checkpoint 4 ------------------------------------")
 	if err != nil {
 		log.Println("send tx error, err: %v\n", err)
 	}
-
+	log.Println("-----------------------------------checkpoint 5 ------------------------------------")
 	log.Println("txhash:", txhash)
+	return randomToken, MintKey, nil
 }

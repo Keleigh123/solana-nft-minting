@@ -13,8 +13,9 @@ import (
 
 //var AliceTokenRandomTokenPubkey = common.PublicKeyFromString("BV5EnZ3wFAhRt4Kff6VXRMjebEn8Jg9zQaGLby52Aro")
 //var AliceTokenATAPubkey = common.PublicKeyFromString("2oNTPr1zd4AwDKxrAfsUp7Qt6cCtd88v5tdAVBa4qeqy")
+var Ata = common.PublicKeyFromString("Axpnz51M9b5iYVNcTwLJpLqWrQPQ3LxBEhi9kNTFb3PH")
 
-func TransferTokens() {
+func TransferTokens(mintKey string, randomAccount string, destination string) error {
 	c := client.NewClient(rpc.TestnetRPCEndpoint)
 
 	res, err := c.GetRecentBlockhash(context.Background())
@@ -27,9 +28,9 @@ func TransferTokens() {
 			RecentBlockhash: res.Blockhash,
 			Instructions: []types.Instruction{
 				tokenprog.TransferChecked(tokenprog.TransferCheckedParam{
-					From:     RandomTokenAccount,
-					To:       Ata,
-					Mint:     MintPubkey,
+					From:     common.PublicKeyFromString(randomAccount),
+					To:       common.PublicKeyFromString(destination),
+					Mint:     common.PublicKeyFromString(mintKey),
 					Auth:     AliceSK.PublicKey,
 					Signers:  []common.PublicKey{},
 					Amount:   1e8,
@@ -49,4 +50,5 @@ func TransferTokens() {
 	}
 
 	log.Println("txhash for transferring tokens:", txhash)
+	return nil
 }
