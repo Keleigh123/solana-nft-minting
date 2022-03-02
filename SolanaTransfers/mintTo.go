@@ -11,11 +11,11 @@ import (
 	"github.com/portto/solana-go-sdk/types"
 )
 
-//var AliceTokenRandomTokenPubkey = common.PublicKeyFromString("BV5EnZ3wFAhRt4Kff6VXRMjebEn8Jg9zQaGLby52Aro")
-//var AliceTokenATAPubkey = common.PublicKeyFromString("2oNTPr1zd4AwDKxrAfsUp7Qt6cCtd88v5tdAVBa4qeqy")
+var Ata = common.PublicKeyFromString("Axpnz51M9b5iYVNcTwLJpLqWrQPQ3LxBEhi9kNTFb3PH")
+var RandomTokenAccount = common.PublicKeyFromString("3mjHybVMEAyaqruekTKW9juVXjmqXZCPkBAyBWmaY4N5")
 
-func TransferTokens() {
-	c := client.NewClient(rpc.TestnetRPCEndpoint)
+func MintTo() {
+	c := client.NewClient(rpc.DevnetRPCEndpoint)
 
 	res, err := c.GetRecentBlockhash(context.Background())
 	if err != nil {
@@ -26,12 +26,11 @@ func TransferTokens() {
 			FeePayer:        AliceSK.PublicKey,
 			RecentBlockhash: res.Blockhash,
 			Instructions: []types.Instruction{
-				tokenprog.TransferChecked(tokenprog.TransferCheckedParam{
-					From:     RandomTokenAccount,
-					To:       Ata,
+				tokenprog.MintToChecked(tokenprog.MintToCheckedParam{
 					Mint:     MintPubkey,
 					Auth:     AliceSK.PublicKey,
 					Signers:  []common.PublicKey{},
+					To:       RandomTokenAccount,
 					Amount:   1e8,
 					Decimals: 8,
 				}),
@@ -40,7 +39,7 @@ func TransferTokens() {
 		Signers: []types.Account{AliceSK, AliceSK},
 	})
 	if err != nil {
-		log.Fatalf("failed to new tx, err: %v", err)
+		log.Fatalf("generate tx error, err: %v\n", err)
 	}
 
 	txhash, err := c.SendTransaction(context.Background(), tx)
@@ -48,5 +47,5 @@ func TransferTokens() {
 		log.Fatalf("send raw tx error, err: %v\n", err)
 	}
 
-	log.Println("txhash for transferring tokens:", txhash)
+	log.Println("txhash:", txhash)
 }

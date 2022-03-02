@@ -24,6 +24,17 @@ func Mint() string {
 	mint := types.NewAccount()
 	fmt.Println("mint:", mint.PublicKey.ToBase58())
 
+	// sig, err := c.RequestAirdrop(
+	// 	context.TODO(),
+	// 	mint.PublicKey.ToBase58(), // address
+	// 	1e9,                       // lamports (1 SOL = 10^9 lamports)
+	// )
+	// if err != nil {
+	// 	log.Fatalf("failed to request airdrop, err: %v", err)
+	// }
+	// fmt.Println("-----------------------------------------air drop succeeded-------------------------------")
+	// fmt.Println(sig)
+
 	// get rent
 	rentExemptionBalance, err := c.GetMinimumBalanceForRentExemption(
 		context.Background(),
@@ -50,7 +61,7 @@ func Mint() string {
 					Space:    tokenprog.MintAccountSize,
 				}),
 				tokenprog.InitializeMint(tokenprog.InitializeMintParam{
-					Decimals:   8,
+					Decimals:   0,
 					Mint:       mint.PublicKey,
 					MintAuth:   AliceSK.PublicKey,
 					FreezeAuth: nil,
@@ -59,8 +70,9 @@ func Mint() string {
 		}),
 		Signers: []types.Account{AliceSK, mint},
 	})
-
+	fmt.Println("--------------------------------------------------mint---------------------", Mint)
 	var MintKey = mint.PublicKey
+	fmt.Println("---------------------------------mint key-----------------------", MintKey)
 	if err != nil {
 		log.Fatalf("generate tx error, err: %v\n", err)
 	}

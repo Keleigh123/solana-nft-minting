@@ -36,30 +36,22 @@ func main() {
 	fmt.Println("Wallet Address:", wallet.PublicKey.ToBase58())
 	fmt.Println("Private Key:", wallet.PrivateKey)
 
+	//fund new account----------------------------------------------------------------------------------------
+	sig, err := c.RequestAirdrop(
+		context.TODO(),
+		wallet.PublicKey.ToBase58(), // address
+		1e9,                         // lamports (1 SOL = 10^9 lamports)
+	)
+	if err != nil {
+		log.Fatalf("failed to request airdrop, err: %v", err)
+	}
+	fmt.Println("-----------------------------------------air drop succeeded-------------------------------")
+	fmt.Println(sig)
+
 	recentBlockhashResponse, err := c.GetRecentBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("failed to get recent blockhash, err: %v", err)
 	}
-
-	//fund new account----------------------------------------------------------------------------------------
-	// sig, err := c.RequestAirdrop(
-	// 	context.TODO(),
-	// 	wallet.PublicKey.ToBase58(), // address
-	// 	1e9,                         // lamports (1 SOL = 10^9 lamports)
-	// )
-	// if err != nil {
-	// 	log.Fatalf("failed to request airdrop, err: %v", err)
-	// }
-	// fmt.Println(sig)
-	//get balance --------------------------------------------------------------------------------------------------------------
-	// balance, err := c.GetBalance(
-	// 	context.TODO(),
-	// 	wallet.PublicKey.ToBase58(),
-	// )
-	// if err != nil {
-	// 	log.Fatalf("failed to get balance, err: %v", err)
-	// }
-	// fmt.Printf("balance: %v\n", balance)
 
 	tx, err := types.NewTransaction(types.NewTransactionParam{
 		Signers: []types.Account{AliceSK},
@@ -70,7 +62,7 @@ func main() {
 				sysprog.Transfer(sysprog.TransferParam{
 					From:   AliceSK.PublicKey,
 					To:     wallet.PublicKey,
-					Amount: 15,
+					Amount: 1e9,
 				}),
 			},
 		}),
@@ -87,7 +79,21 @@ func main() {
 
 	log.Println("txhash:", txhash)
 
+	fmt.Println("------------------wallet pk------------------", wallet.PublicKey)
+	//get balance --------------------------------------------------------------------------------------------------------------
+	balance, err := c.GetBalance(
+		context.TODO(),
+		wallet.PublicKey.ToBase58(),
+	)
+	if err != nil {
+		log.Fatalf("failed to get balance, err: %v", err)
+	}
+	fmt.Println("-------------------------------------------balance is --------------------", balance)
+	fmt.Printf("balance: %v\n", balance)
+
 	SolanaTransfers.Mint()
+	SolanaTransfers.GenerateRandomTokenAccount()
+	SolanaTransfers.MintTo()
 	SolanaTransfers.GenerateTokenAccount()
-	SolanaTransfers.TransferTokens()
+	//SolanaTransfers.TransferTokens()
 }
