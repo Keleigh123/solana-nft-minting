@@ -7,6 +7,7 @@ import (
 	"log"
 
 	//"log"
+
 	"solana-wallet/solanaHandler"
 
 	"github.com/portto/solana-go-sdk/client"
@@ -91,5 +92,7 @@ func main() {
 	fmt.Println("-------------------------------------------balance is --------------------", balance)
 	fmt.Printf("balance: %v\n", balance)
 
+	//solanaHandler.HandleCalls()
+	fmt.Println("------------------------------------------------------------------------------------------------------------------------")
 	solanaHandler.HandleCalls()
 }
