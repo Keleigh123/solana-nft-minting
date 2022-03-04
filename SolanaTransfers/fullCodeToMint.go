@@ -24,10 +24,11 @@ var feePayer, _ = types.AccountFromBytes([]byte{162, 128, 223, 203, 33, 217, 35,
 
 func MainCode() (string, string, error) {
 	c := client.NewClient(rpc.TestnetRPCEndpoint)
-
+	fmt.Println("--------------------fee payer-----------------------------------------", feePayer.PublicKey)
 	mint := types.NewAccount()
 	fmt.Printf("NFT: %v\n", mint.PublicKey.ToBase58())
 	var mintKey = mint.PublicKey.ToBase58()
+	//var mintSign = string(mint.PrivateKey)
 
 	ata, _, err := common.FindAssociatedTokenAddress(feePayer.PublicKey, mint.PublicKey)
 	if err != nil {
@@ -86,7 +87,7 @@ func MainCode() (string, string, error) {
 						Name:                 "Tracified NFT",
 						Symbol:               "Kels",
 						Uri:                  "https://tillit-explorer.netlify.app/proof-verification?type=pobl&txn=241bf3d832f9f73efd66abc1468b7ab10364c46aeb473fd4638f31043f976585",
-						SellerFeeBasisPoints: 100,
+						SellerFeeBasisPoints: 500,
 						Creators: &[]tokenmeta.Creator{
 							{
 								Address:  feePayer.PublicKey,
@@ -108,6 +109,7 @@ func MainCode() (string, string, error) {
 					Auth:   feePayer.PublicKey,
 					Amount: 1,
 				}),
+
 				tokenmeta.CreateMasterEdition(tokenmeta.CreateMasterEditionParam{
 					Edition:         tokenMasterEditionPubkey,
 					Mint:            mint.PublicKey,

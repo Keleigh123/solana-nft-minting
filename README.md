@@ -6,3 +6,6 @@ This is for nft development using Solana.
 4. mintTo.go is the file that will mint the nft ad send to the randomTokenAccount
 5. associatedTokenAccount.go is another account creation .
 6. transferToken.go is to send tokens from one destination to another, destination is from random token account to associated token account.
+
+
+create new wallet using already existing file and pass

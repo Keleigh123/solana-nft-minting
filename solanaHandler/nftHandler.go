@@ -13,18 +13,22 @@ func HandleCalls() {
 		fmt.Println(err)
 	} else {
 		fmt.Println(mintKey, source)
-		// destination, err := SolanaTransfers.GenerateRandomTokenAccount(mintKey)
-		// if err != nil {
-		// 	log.Println("Error when creating destination account")
-		// 	fmt.Println(err)
-		// } else {
-		// 	fmt.Println(destination)
-		err := SolanaTransfers.TransferTokens(mintKey, source)
+		destination, err := SolanaTransfers.GenerateTokenAccount(mintKey)
 		if err != nil {
-			log.Println("Error when transferring NFTs")
+			log.Println("Error when creating destination account")
 			fmt.Println(err)
+		} else {
+			fmt.Println(destination)
+			err := SolanaTransfers.TransferTokens(mintKey, source, destination)
+			if err != nil {
+				log.Println("Error when transferring NFTs")
+				fmt.Println(err)
+			}
+			fmt.Println("Token Transfer Complete")
+
+			// fmt.Println(destination)
+
 		}
-		fmt.Println("Token Transfer Complete")
 	}
 }
 
