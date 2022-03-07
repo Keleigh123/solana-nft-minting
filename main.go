@@ -9,7 +9,7 @@ import (
 	//"log"
 
 	"fmt"
-	"solana-wallet/solanaHandler"
+	"solana-wallet/mintNFT"
 
 	// "github.com/portto/solana-go-sdk/client"
 	// "github.com/portto/solana-go-sdk/program/sysprog"
@@ -95,5 +95,5 @@ func main() {
 
 	// //solanaHandler.HandleCalls()
 	// fmt.Println("------------------------------------------------------------------------------------------------------------------------")
-	solanaHandler.HandleCalls()
+	mintNFT.MainCode()
 }

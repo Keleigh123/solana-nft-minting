@@ -1,4 +1,4 @@
-package SolanaTransfers
+package mintNFT
 
 import (
 	"context"
